@@ -1,7 +1,9 @@
+import { AppBackground } from "./atoms";
+
 export const App = () => {
   return (
-    <div>
-      <h1>App</h1>
-    </div>
+    <main className="h-screen relative">
+      <AppBackground className="absolute inset-0" />
+    </main>
   );
 };
