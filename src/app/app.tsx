@@ -1,6 +1,6 @@
-import { MorphingText } from "@/components/ui/morphing-text";
 import { AppBackground } from "./atoms";
-import { Timer } from "./organisms";
+import { Timer, TimerProgressBar } from "./organisms";
+import { AppHeading } from "./molecules";
 
 export const App = () => {
   return (
@@ -8,14 +8,9 @@ export const App = () => {
       <AppBackground className="absolute inset-0" />
 
       <div className="z-10 flex flex-col items-center justify-between gap-8 h-full w-full py-[2%] px-[5%]">
-        <MorphingText
-          texts={["Pomo", "Timer"]}
-          className="text-white opacity-95 text-center"
-        />
-
+        <AppHeading />
         <Timer />
-
-        <div />
+        <TimerProgressBar />
       </div>
     </main>
   );
