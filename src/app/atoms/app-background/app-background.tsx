@@ -1,29 +1,24 @@
-import { useState } from "react";
-
 import { cn } from "@/lib/utils";
 import { GradientBackground } from "@/components/ui/gradient-background";
 
 import { BackgroundVariant } from "./types";
+import { useUnit } from "effector-react";
+import { $currentPhase } from "@/app/store/timer-store";
 
 export type AppBackgroundProps = {
   className?: string;
 };
 
 export const AppBackground = ({ className }: AppBackgroundProps) => {
-  const [currentVariant, setCurrentVariant] = useState<BackgroundVariant>(
-    BackgroundVariant.RELAXING
-  );
+  const currentPhase = useUnit($currentPhase);
 
-  const handleClick = () => {
-    setCurrentVariant(
-      currentVariant === BackgroundVariant.WORKING
-        ? BackgroundVariant.RELAXING
-        : BackgroundVariant.WORKING
-    );
-  };
+  const currentVariant =
+    currentPhase.name === "Work"
+      ? BackgroundVariant.WORKING
+      : BackgroundVariant.RELAXING;
 
   return (
-    <div className={cn("relative", className)} onClick={handleClick}>
+    <div className={cn("relative", className)}>
       <GradientBackground
         className={cn(
           BackgroundVariant.RELAXING,
