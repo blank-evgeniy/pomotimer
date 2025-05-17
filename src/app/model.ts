@@ -4,17 +4,17 @@ export type Phase = {
 };
 
 const workPhase: Phase = {
-  duration: 25,
+  duration: 25 * 60,
   name: "Work",
 };
 
 const shortBreakPhase: Phase = {
-  duration: 5,
+  duration: 5 * 60,
   name: "Short Break",
 };
 
 const longBreakPhase: Phase = {
-  duration: 30,
+  duration: 30 * 60,
   name: "Long Break",
 };
 
