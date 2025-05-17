@@ -3,6 +3,7 @@ import { interval } from "patronum/interval";
 import { persist } from "effector-storage/local";
 import { phases } from "../model";
 import { updateTitleFx } from "./effects/title";
+import { showNotificationFx } from "./effects/show-notification";
 
 export const $currentPhaseIndex = createStore(0);
 export const $currentPhase = $currentPhaseIndex.map((index) => phases[index]);
@@ -11,6 +12,7 @@ export const $timer = createStore(phases[0].duration).on(
   $currentPhase,
   (_, phase) => phase.duration
 );
+export const $endTime = createStore(0);
 export const $isRunning = createStore(false);
 
 export const startTimer = createEvent();
@@ -19,14 +21,33 @@ export const resetTimer = createEvent();
 export const nextPhase = createEvent();
 
 const { tick, isRunning } = interval({
-  timeout: 1,
+  timeout: 1000,
   start: startTimer,
   stop: stopTimer,
 });
 
-$timer.on(tick, (timer) => timer - 1);
 $isRunning.on(isRunning, (isRunning) => isRunning);
 
+// calculate end time
+sample({
+  clock: startTimer,
+  source: $timer,
+  fn: (timer) => {
+    return Date.now() + timer * 1000;
+  },
+  target: $endTime,
+});
+// update timer
+sample({
+  clock: tick,
+  source: $endTime,
+  fn: (endTime) => {
+    return Math.ceil((endTime - Date.now()) / 1000);
+  },
+  target: $timer,
+});
+
+// start/stop timer handling
 sample({
   clock: startTimer,
   fn: () => true,
@@ -39,6 +60,7 @@ sample({
   target: $isRunning,
 });
 
+// reset timer handling
 sample({
   clock: resetTimer,
   fn: () => false,
@@ -51,12 +73,16 @@ sample({
   target: $timer,
 });
 
+// timer finished handling
 sample({
   clock: $timer,
-  filter: (time: number) => time === 0,
-  target: nextPhase,
+  filter: (_currentPhase, time) => time === 0 || time < 0,
+  source: $currentPhase,
+  fn: (currentPhase) => currentPhase,
+  target: [nextPhase, showNotificationFx],
 });
 
+// next phase handling
 sample({
   clock: nextPhase,
   fn: () => ($currentPhaseIndex.getState() + 1) % phases.length,
@@ -68,6 +94,7 @@ sample({
   target: stopTimer,
 });
 
+// update title
 sample({
   clock: [$timer.updates, $currentPhase.updates],
   source: {
@@ -78,6 +105,7 @@ sample({
   target: updateTitleFx,
 });
 
+// persist
 persist({
   store: $currentPhaseIndex,
   key: "currentPhaseIndex",
