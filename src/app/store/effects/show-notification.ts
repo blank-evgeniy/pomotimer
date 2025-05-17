@@ -6,6 +6,9 @@ export const showNotificationFx = createEffect<Phase, void>({
     const message =
       prevPhase.name === "Work" ? "Время отдыхать!" : "Время работать!";
 
+    const icon =
+      prevPhase.name === "Work" ? "/hotel-bed-fill.svg" : "/run-fill.svg";
+
     if (!("Notification" in window)) {
       console.log("Браузер не поддерживает уведомления");
       return;
@@ -14,7 +17,7 @@ export const showNotificationFx = createEffect<Phase, void>({
     if (Notification.permission === "granted") {
       const notification = new Notification(message, {
         body: "Нажмите, чтобы открыть приложение",
-        icon: "/vite.svg",
+        icon,
       });
       notification.onclick = () => {
         window.focus();
@@ -25,7 +28,7 @@ export const showNotificationFx = createEffect<Phase, void>({
         if (permission === "granted") {
           const notification = new Notification(message, {
             body: "Нажмите, чтобы открыть приложение",
-            icon: "/vite.svg",
+            icon,
           });
           notification.onclick = () => {
             window.focus();
