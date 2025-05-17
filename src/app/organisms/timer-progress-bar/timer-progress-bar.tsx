@@ -6,6 +6,7 @@ import {
   $timer,
 } from "@/app/store/timer-store";
 import { useUnit } from "effector-react";
+import { motion } from "motion/react";
 
 export const TimerProgressBar = () => {
   const timer = useUnit($timer);
@@ -23,7 +24,7 @@ export const TimerProgressBar = () => {
         <TimerProgress
           key={index}
           value={isCurrent ? progressValue : isCompleted ? 100 : 0}
-          className={isCurrent ? "border-2 border-gray-800" : ""}
+          className={isCurrent ? "border-2 border-white" : ""}
           variant={
             phase === "Work"
               ? "red"
@@ -36,5 +37,16 @@ export const TimerProgressBar = () => {
     });
   };
 
-  return <footer className="h-6 w-full flex gap-4">{renderProgress()}</footer>;
+  return (
+    <motion.footer
+      initial={{ translateY: "200px", scale: 0.5 }}
+      animate={{ translateY: 0, scale: 1 }}
+      transition={{
+        duration: 0.8,
+      }}
+      className="h-6 w-full flex gap-4 opacity-90"
+    >
+      {renderProgress()}
+    </motion.footer>
+  );
 };
