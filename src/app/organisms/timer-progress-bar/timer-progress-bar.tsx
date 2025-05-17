@@ -23,6 +23,7 @@ export const TimerProgressBar = () => {
         <TimerProgress
           key={index}
           value={isCurrent ? progressValue : isCompleted ? 100 : 0}
+          className={isCurrent ? "border-2 border-gray-800" : ""}
           variant={
             phase === "Work"
               ? "red"

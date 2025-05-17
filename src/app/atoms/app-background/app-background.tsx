@@ -18,7 +18,7 @@ export const AppBackground = ({ className }: AppBackgroundProps) => {
       : BackgroundVariant.RELAXING;
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("absolute inset-0", className)}>
       <GradientBackground
         className={cn(
           BackgroundVariant.RELAXING,

@@ -20,7 +20,7 @@ const progressBgVariants = cva("h-full w-full flex-1 transition-all", {
   },
 });
 
-const progressVariants = cva("h-4 w-full rounded-full overflow-hidden ", {
+const progressVariants = cva("h-5 w-full rounded-full overflow-hidden ", {
   variants: {
     variant: {
       red: "bg-red-200",
