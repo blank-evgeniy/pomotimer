@@ -2,6 +2,7 @@ import { createEvent, createStore, sample } from "effector";
 import { interval } from "patronum/interval";
 import { persist } from "effector-storage/local";
 import { phases } from "../model";
+import { updateTitleFx } from "./effects/title";
 
 export const $currentPhaseIndex = createStore(0);
 export const $currentPhase = $currentPhaseIndex.map((index) => phases[index]);
@@ -65,6 +66,16 @@ sample({
 sample({
   clock: nextPhase,
   target: stopTimer,
+});
+
+sample({
+  clock: [$timer.updates, $currentPhase.updates],
+  source: {
+    seconds: $timer,
+    phaseName: $currentPhase.map((phase) => phase.name),
+  },
+  fn: ({ seconds, phaseName }) => ({ seconds, phaseName }),
+  target: updateTitleFx,
 });
 
 persist({
